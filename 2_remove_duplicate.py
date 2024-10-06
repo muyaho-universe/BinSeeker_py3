@@ -1,6 +1,6 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 # -*- coding: UTF-8 -*-
-# 处理重名文件
+# Handle files with duplicate names
 
 import config
 import os
@@ -13,15 +13,14 @@ import shutil
     dstfile='/Users/xxx/tmp/tmp/1/test.sh'
 '''
 
-
 def mymovefile(srcfile, dstfile):
     if os.path.isfile(srcfile):
-        fpath, fname = os.path.split(dstfile)  # 分离文件名和路径
+        fpath, fname = os.path.split(dstfile)  # Separate filename and path
         if not os.path.exists(fpath):
-            os.makedirs(fpath)  # 创建路径
+            os.makedirs(fpath)  # Create directory if it does not exist
         if os.path.exists(dstfile):
             os.remove(dstfile)
-        shutil.move(srcfile, dstfile)  # 移动文件
+        shutil.move(srcfile, dstfile)  # Move the file
 
 
 for bin_path in config.STEP2_PORGRAM_ARR:
@@ -37,13 +36,13 @@ for bin_path in config.STEP2_PORGRAM_ARR:
 
             funfeacsv = open(paths + os.sep + 'functions_list_fea.csv')
             newfunfeacsv = open(paths + os.sep + 'functions_list.csv', 'w')
-            while 1:
+            while True:
                 line = funfeacsv.readline()
                 if not line:
                     break
                 else:
                     funname = line.split(',')[0]
-                    if bin_path is "openssl" and funname in config.STEP2_CVE_OPENSSL_FUN_LIST.keys():
+                    if bin_path == "openssl" and funname in config.STEP2_CVE_OPENSSL_FUN_LIST.keys():
                         if funname in funset:
                             srcfile_pre = paths + os.sep + "temp" + os.sep + funname
                         else:
@@ -55,12 +54,12 @@ for bin_path in config.STEP2_PORGRAM_ARR:
                         mymovefile(srcfile_pre + "_dfg.txt", dstfile_pre + "_dfg.txt")
                     else:
                         if funname in funset:
-                            # print "find"
+                            # print("find")
                             dufunname = "duplicate_" + funname
                             newline = dufunname + line[len(funname):]
                             newfunfeacsv.write(newline)
-                            print newline
-                            # print line
+                            print(newline)
+                            # print(line)
                             srcfile_pre = temppath + os.sep + funname
                             dstfile_pre = paths + os.sep + dufunname
                             mymovefile(srcfile_pre + "_fea.csv", dstfile_pre + "_fea.csv")
@@ -77,6 +76,3 @@ for bin_path in config.STEP2_PORGRAM_ARR:
             srcfile = paths + os.sep + 'functions_list_fea.csv'
             dstfile = paths + os.sep + 'functions_list.csv'
             mymovefile(srcfile, dstfile)
-
-
-

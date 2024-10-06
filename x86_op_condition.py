@@ -1,7 +1,7 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 def inverse(d):
     new_d = {}
-    for (k, v) in d.items():
+    for k, v in d.items():
         new_d[v] = k
     return new_d
 
@@ -80,7 +80,6 @@ X86Condcode = inverse({
     'X86CondNLE'    : 15,
     'X86CondAlways' : 16
 })
-
 
 SIZE = {
     'L': 32,

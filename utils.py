@@ -15,13 +15,13 @@ def getAllFilesInPath(directory):
     for parentPath, childDirectorys, files in os.walk(directory):
         return files
     
-def getAbsolutePathOfFile(filePath,fileName):
-    if filePath[-1]=='/' or filePath[-1]=='\\':
+def getAbsolutePathOfFile(filePath, fileName):
+    if filePath[-1] == '/' or filePath[-1] == '\\':
         filePath = filePath[:-1]
     sysstr = platform.system()
-    if(sysstr =="Windows"):
+    if sysstr == "Windows":
         filePath = filePath + "\\" + fileName
-    elif(sysstr == "Linux"):
+    elif sysstr == "Linux":
         filePath = filePath + "/" + fileName
     else:
         filePath = filePath + "/" + fileName
@@ -30,31 +30,27 @@ def getAbsolutePathOfFile(filePath,fileName):
 def getPath():
     return os.path.dirname(os.path.realpath(__file__)).strip()
 
-def createSignatureDirectory(currentPath,directoryName):
-    #directoryName = "signature"
+def createSignatureDirectory(currentPath, directoryName):
     sysstr = platform.system()
     directory = currentPath
-    if(sysstr =="Windows"):
+    if sysstr == "Windows":
         directory = directory + "\\" + directoryName
-    elif(sysstr == "Linux"):
+    elif sysstr == "Linux":
         directory = directory + "/" + directoryName
     else:
         directory = directory + "/" + directoryName
-    isExists=os.path.exists(directory)
-    if isExists:
-        shutil.rmtree(directory)
-    isExists=os.path.exists(directory)
+    isExists = os.path.exists(directory)
     if isExists:
         shutil.rmtree(directory)
     os.makedirs(directory)
     return directory
 
-def generateFilePath(currentPath,fileName):
+def generateFilePath(currentPath, fileName):
     sysstr = platform.system()
     filePath = currentPath
-    if(sysstr =="Windows"):
+    if sysstr == "Windows":
         filePath = filePath + "\\" + fileName + ".txt"
-    elif(sysstr == "Linux"):
+    elif sysstr == "Linux":
         filePath = filePath + "/" + fileName + ".txt"
     else:
         filePath = filePath + "/" + fileName + ".txt"
@@ -63,7 +59,7 @@ def generateFilePath(currentPath,fileName):
 def guess_machine():
     "Return an instance of Machine corresponding to the IDA guessed processor"
 
-    processor_name = GetLongPrm(INF_PROCNAME)
+    processor_name = get_inf_structure().procName
     info = idaapi.get_inf_structure()
 
     if info.is_64bit():
@@ -83,10 +79,6 @@ def guess_machine():
         machine = Machine(size2machine[size])
 
     elif processor_name == "ARM":
-        # TODO ARM/thumb
-        # hack for thumb: set armt = True in globals :/
-        # set bigendiant = True is bigendian
-        # Thumb, size, endian
         info2machine = {(True, 32, True): "armtb",
                         (True, 32, False): "armtl",
                         (False, 32, True): "armb",
@@ -97,7 +89,7 @@ def guess_machine():
         is_armt = globals().get('armt', False)
         is_bigendian = info.is_be()
         infos = (is_armt, size, is_bigendian)
-        if not infos in info2machine:
+        if infos not in info2machine:
             raise NotImplementedError('not fully functional')
         machine = Machine(info2machine[infos])
 
@@ -115,14 +107,14 @@ def guess_machine():
     elif processor_name == "PPC":
         machine = Machine("ppc32b")
     else:
-        print repr(processor_name)
+        print(repr(processor_name))
         raise NotImplementedError('not fully functional')
 
     return machine
 
 
 class TranslatorIDA(Translator):
-    """Translate a Miasm expression to a IDA colored string"""
+    """Translate a Miasm expression to an IDA colored string"""
 
     # Implemented language
     __LANG__ = "ida_w_color"
@@ -175,7 +167,7 @@ class TranslatorIDA(Translator):
         return out
 
     def from_ExprOp(self, expr):
-        if expr._op == '-':		# Unary minus
+        if expr._op == '-':  # Unary minus
             return '-' + self.str_protected_child(expr._args[0], expr)
         if expr.is_associative() or expr.is_infix():
             return (' ' + expr._op + ' ').join([self.str_protected_child(arg, expr)
@@ -184,8 +176,7 @@ class TranslatorIDA(Translator):
                 ', '.join([self.from_expr(arg) for arg in expr._args]) + ')')
 
     def from_ExprAff(self, expr):
-        return "%s = %s" % tuple(map(expr.from_expr, (expr.dst, expr.src)))
-
+        return "%s = %s" % tuple(map(self.from_expr, (expr.dst, expr.src)))
 
 
 def expr2colorstr(regs_ids, expr):
@@ -204,7 +195,7 @@ class translatorForm(idaapi.Form):
     Offer a ComboBox with available languages (ie. IR translators) and the
     corresponding translation."""
 
-    flags = (idaapi.Form.MultiLineTextControl.TXTF_FIXEDFONT | \
+    flags = (idaapi.Form.MultiLineTextControl.TXTF_FIXEDFONT |
                  idaapi.Form.MultiLineTextControl.TXTF_READONLY)
 
     def __init__(self, expr):
@@ -242,7 +233,7 @@ Python Expression
             dest_lang = self.languages[self.GetControlValue(self.cbLanguage)]
             try:
                 text = Translator.to_language(dest_lang).from_expr(self.expr)
-            except Exception, error:
+            except Exception as error:
                 self.ShowField(self.result, False)
                 return -1
 

@@ -1,4 +1,4 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 X86G_CC_SHIFT_O = 11
 X86G_CC_SHIFT_S = 7
 X86G_CC_SHIFT_Z = 6
@@ -13,14 +13,14 @@ X86G_CC_MASK_A = (1 << X86G_CC_SHIFT_A)
 X86G_CC_MASK_C = (1 << X86G_CC_SHIFT_C)
 X86G_CC_MASK_P = (1 << X86G_CC_SHIFT_P)
 
-#additional eflags masks
+# Additional eflags masks
 X86G_CC_SHIFT_ID = 21
 X86G_CC_SHIFT_AC = 18
 X86G_CC_SHIFT_D = 10
 
 X86G_CC_MASK_ID = (1 << X86G_CC_SHIFT_ID)
 X86G_CC_MASK_AC = (1 << X86G_CC_SHIFT_AC)
-X86G_CC_MASK_D  = (1 << X86G_CC_SHIFT_D)
+X86G_CC_MASK_D = (1 << X86G_CC_SHIFT_D)
 
 # FPU flag masks
 X86G_FC_SHIFT_C3 = 14
@@ -66,8 +66,8 @@ parity_table = [X86G_CC_MASK_P, 0, 0, X86G_CC_MASK_P, 0, X86G_CC_MASK_P, X86G_CC
     X86G_CC_MASK_P, 0, 0, X86G_CC_MASK_P, 0, X86G_CC_MASK_P, X86G_CC_MASK_P, 0,
     0, X86G_CC_MASK_P, X86G_CC_MASK_P, 0, X86G_CC_MASK_P, 0, 0, X86G_CC_MASK_P]
 
-def lshift(x,n):
-    if n>=0:
-        return int((x<<n)&4294967295L)#2^32-1
+def lshift(x, n):
+    if n >= 0:
+        return int((x << n) & 0xFFFFFFFF)  # 2^32-1
     else:
-        return x>>(-n)
+        return x >> (-n)
