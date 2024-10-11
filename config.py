@@ -5,8 +5,8 @@ import os
 
 # IDA Path
 
-IDA32_DIR = "C:\\Program Files\\IDA Pro 7.7\\ida.exe"
-IDA64_DIR = "C:\\Program Files\\IDA Pro 7.7\\ida64.exe"
+IDA32_DIR = "./ida/ida.exe"
+IDA64_DIR = "./ida/ida.exe"
 
 ROOT_DIR = os.path.dirname(os.path.realpath(__file__))  # The path of the current file
 print("ROOT_DIR:", ROOT_DIR)
@@ -28,19 +28,20 @@ SEARCH_RESULT_GEMINI_DIR = ROOT_DIR + os.sep + "7_Search_Result" + os.sep + "Gem
 SEARCH_RESULT_VULSEEKER_DIR = ROOT_DIR + os.sep + "7_Search_Result" + os.sep + "VulSeeker"
 
 # if convert all binary files into disassembly files
-STEP1_GEN_IDB_FILE = False
+STEP1_GEN_IDB_FILE = True
 # STEP1_PORGRAM_ARR = ["openssl"]  # "openssl","coreutils","busybox","CVE-2015-1791"
-STEP1_PORGRAM_ARR = ["wget"]
+STEP1_PORGRAM_ARR = ["binutils", "coreutils"]
 # if extract feature file
 STEP2_GEN_FEA = True
-STEP2_PORGRAM_ARR = ["wget"]  # all the project names "openssl","busybox","coreutils","CVE-2015-1791"
+STEP2_PORGRAM_ARR = ["binutils", "coreutils"]  # all the project names "openssl","busybox","coreutils","CVE-2015-1791"
 STEP2_REMOVE_DUP = True
 # STEP2_PORGRAM_ARR = ["wget"]  # all the project names
-STEP2_CVE_OPENSSL_FUN_LIST = {'ssl3_get_new_session_ticket': 'CVE-2015-1791', 'OBJ_obj2txt': 'CVE-2014-3508'}
+# STEP2_CVE_OPENSSL_FUN_LIST = {'ssl3_get_new_session_ticket': 'CVE-2015-1791', 'OBJ_obj2txt': 'CVE-2014-3508'}
 
 # if train train dataset
 STEP3_GEN_DATASET = False
-STEP3_PORGRAM_ARR = ["openssl"]  # "openssl","coreutils","busybox",
+# STEP3_PORGRAM_ARR = ["openssl"]  # "openssl","coreutils","busybox",
+STEP3_PORGRAM_ARR = ["binutils", "coreutils"]
 TRAIN_DATASET_NUM = 50000
 
 # if train VulSeeker TFrecord

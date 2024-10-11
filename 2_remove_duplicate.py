@@ -26,6 +26,7 @@ def mymovefile(srcfile, dstfile):
 for bin_path in config.STEP2_PORGRAM_ARR:
     # config.FEA_DIR + str(os.sep) + bin_path
     path = glob.glob(config.FEA_DIR + str(os.sep) + bin_path + os.sep + "*")
+    print("path:", path)
     for paths in path:
         temppath = paths + os.sep + 'temp'
         if os.path.exists(temppath):

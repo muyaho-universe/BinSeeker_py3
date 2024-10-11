@@ -7,6 +7,7 @@ import shutil
 from miasm2.analysis.machine import Machine
 from miasm2.ir.translators import Translator
 import miasm2.expression.expression as m2_expr
+import ida_idp
 
 def isExistFile(filePath):
     return os.path.exists(filePath)
@@ -59,9 +60,9 @@ def generateFilePath(currentPath, fileName):
 def guess_machine():
     "Return an instance of Machine corresponding to the IDA guessed processor"
 
-    processor_name = get_inf_structure().procName
+    processor_name = ida_idp.get_idp_name()
     info = idaapi.get_inf_structure()
-
+    
     if info.is_64bit():
         size = 64
     elif info.is_32bit():
@@ -98,23 +99,27 @@ def guess_machine():
         guess_funcs.append(arm_guess_subcall)
         guess_funcs.append(arm_guess_jump_table)
 
-    elif processor_name == "msp430":
-        machine = Machine("msp430")
-    elif processor_name == "mipsl":
-        machine = Machine("mips32l")
-    elif processor_name == "mipsb":
-        machine = Machine("mips32b")
-    elif processor_name == "PPC":
-        machine = Machine("ppc32b")
+    elif processor_name == "MIPS" or processor_name == "mips":
+        if info.is_32bit() and not info.is_be():
+            machine = Machine("mips32l")
+            
+        elif info.is_32bit() and info.is_be():
+            machine = Machine("mips32b")
+            
+        elif info.is_64bit() and not info.is_be():
+            machine = Machine("mips64l")
+            
+        elif info.is_64bit() and info.is_be():
+            machine = Machine("mips64b")
     else:
         print(repr(processor_name))
-        raise NotImplementedError('not fully functional')
-
+        raise NotImplementedError(f'not fully functional {processor_name}')
+   
     return machine
 
 
 class TranslatorIDA(Translator):
-    """Translate a Miasm expression to an IDA colored string"""
+    """Translate a miasm2 expression to an IDA colored string"""
 
     # Implemented language
     __LANG__ = "ida_w_color"

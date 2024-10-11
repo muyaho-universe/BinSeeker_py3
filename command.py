@@ -40,12 +40,14 @@ if config.STEP2_GEN_FEA:
                 if i.endswith("idb"):
                     print("HERE")
                     print(config.IDA32_DIR + " -A -S\"" + config.CODE_DIR + os.sep + "2_gen_features.py " + curFeaDir + "  " + i + "  " + str(program) + "  " + str(version) + "\"  " + i + "\n\n")
-                    os.popen(config.IDA32_DIR + " -A  -S\"" + config.CODE_DIR + os.sep + "2_gen_features.py " + curFeaDir + " " + i + "  " + str(program) + "  " + str(version) + "\"  " + i)
+                    
+                    os.popen(config.IDA32_DIR + " -S\"" + config.CODE_DIR + os.sep + "2_gen_features.py " + curFeaDir + " " + i + "  " + str(program) + "  " + str(version) + "\"  " + i)
                 elif i.endswith("i64"):
                     print(config.IDA64_DIR + " -S\"" + config.CODE_DIR + os.sep + "2_gen_features.py " + curFeaDir + "  " + i + "  " + str(program) + "  " + str(version) + "\"  " + i + "\n\n")
                     os.popen(config.IDA64_DIR + " -S\"" + config.CODE_DIR + os.sep + "2_gen_features.py " + curFeaDir + " " + i + "  " + str(program) + "  " + str(version) + "\"  " + i)
 
     print("step2-2. process dump file")
+    print(sys.executable, config.CODE_DIR + os.sep + "2_remove_duplicate.py")
     subprocess.call([sys.executable, config.CODE_DIR + os.sep + "2_remove_duplicate.py"])
 
 if config.STEP6_GEN_SEARCH_VULSEEKER_TFRECORD:

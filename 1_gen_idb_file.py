@@ -2,7 +2,6 @@
 # -*- coding: UTF-8 -*-
 # Disassemble all .o files using IDA
 
-
 import config
 import os
 import subprocess
@@ -10,9 +9,11 @@ import glob
 
 for bin_path in config.STEP1_PORGRAM_ARR:
     print("bin_path:", bin_path)
+    print(config.O_DIR + str(os.sep) + bin_path + "\\*")
     paths = glob.glob(config.O_DIR + str(os.sep) + bin_path + "/*/*")
     print("paths:", paths)
     for file_path in paths:
+        print("file_path:", file_path)
         if file_path.endswith(".idb") or file_path.endswith(".asm") or file_path.endswith(".i64"):
             continue
         if file_path.endswith(".id0") or file_path.endswith(".id1") or file_path.endswith(".id2") or file_path.endswith(".til") or file_path.endswith(".nam"):
